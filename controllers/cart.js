@@ -243,10 +243,105 @@ async function deleteCart(req, res) {
   }
 }
 
+async function finishCart(req, res) {
+  const responseCarrinho = await fs.readFile(__dirname + "/../cart.json");
+  const responseEstoque = await fs.readFile(__dirname + "/../data.json");
+  let objetoCarrinho = JSON.parse(responseCarrinho);
+  const objetoEstoque = JSON.parse(responseEstoque);
+  // verifica se carrinho está vazio
+  if (objetoCarrinho.produtos.length === 0) {
+    return res.status(400).json({ mensagem: "O carrinho está vazio." });
+  }
+  //verifica se existe quantidade solicitada
+  for (const produto of objetoCarrinho.produtos) {
+    const registroEstoque = objetoEstoque.produtos.find(
+      item => item.id === produto.id
+    );
+    if (produto.quantidade > registroEstoque.estoque) {
+      return res.status(404).json({
+        mensagem: `O produto ${produto.nome} não possui a quantidade solicitada em estoque.`,
+      });
+    }
+  }
+  const { type, country, name, documents } = req.body;
+  if (type && country && name && documents[0].type && documents[0].number) {
+    if (type !== "individual")
+      return res
+        .status(400)
+        .json({ mensagem: "O cliente deve ser pessoa física." });
+    else if (country.length !== 2)
+      return res.status(400).json({
+        mensagem: "O campo country deve ser o código do país (2 caracteres).",
+      });
+    else if (name.split(" ").length < 2)
+      return res.status(400).json({
+        mensagem: "O campo name deve conter, pelo menos, nome e sobrenome.",
+      });
+    else if (documents[0].type !== "cpf")
+      return res.status(400).json({
+        mensagem: "O campo documents deve conter um cpf.",
+      });
+    else if (documents[0].number.length !== 11)
+      return res.status(400).json({
+        mensagem: "O campo documents deve conter um cpf de 11 dígitos.",
+      });
+    for (const digito of documents[0].number) {
+      if (isNaN(digito)) {
+        return res.status(400).json({
+          mensagem: "O campo documents deve conter um cpf apenas numérico.",
+        });
+      }
+    }
+    try {
+      const responseCarrinho = await fs.readFile(__dirname + "/../cart.json");
+      const responseEstoque = await fs.readFile(__dirname + "/../data.json");
+      const objetoCarrinho = JSON.parse(responseCarrinho);
+      const objetoEstoque = JSON.parse(responseEstoque);
+      for (const produto of objetoCarrinho.produtos) {
+        const produtoBaixa = objetoEstoque.produtos.find(
+          item => item.id === produto.id
+        );
+        produtoBaixa.estoque -= produto.quantidade;
+      }
+      const { produtos, subtotal, dataDeEntrega, valorDoFrete, totalAPagar } =
+        objetoCarrinho;
+      objetoCarrinho.produtos = [];
+      objetoCarrinho.subtotal = 0;
+      objetoCarrinho.dataDeEntrega = null;
+      objetoCarrinho.valorDoFrete = 0;
+      objetoCarrinho.totalAPagar = 0;
+      await fs.writeFile(
+        __dirname + "/../cart.json",
+        JSON.stringify(objetoCarrinho, null, "  ")
+      );
+      return res
+        .status(200)
+        .json({
+          mensagem: "Sucesso. Carrinho finalizado.",
+          carrinho: {
+            produtos,
+            subtotal,
+            dataDeEntrega,
+            valorDoFrete,
+            totalAPagar,
+          },
+        });
+    } catch (error) {
+      res.status(500).json({
+        erro: "Algo de errado aconteceu. Tente novamente mais tarde.",
+      });
+      console.log(error);
+    }
+  } else {
+    return res.status(400).json({ mensagem: "Dados do cliente incompletos." });
+  }
+}
+
 module.exports = {
   listCart,
   addProductToCart,
   patchProduct,
   deleteProduct,
   deleteCart,
+  finishCart,
 };
