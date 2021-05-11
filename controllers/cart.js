@@ -1,4 +1,5 @@
 const fs = require("fs/promises");
+const pagarme = require("../services/pagarme");
 
 function updateCart(objetoCarrinho, quantidade, preco) {
   const dataAtual = new Date();
@@ -303,29 +304,67 @@ async function finishCart(req, res) {
         );
         produtoBaixa.estoque -= produto.quantidade;
       }
-      const { produtos, subtotal, dataDeEntrega, valorDoFrete, totalAPagar } =
-        objetoCarrinho;
+      const { produtos, totalAPagar } = objetoCarrinho;
       objetoCarrinho.produtos = [];
       objetoCarrinho.subtotal = 0;
       objetoCarrinho.dataDeEntrega = null;
       objetoCarrinho.valorDoFrete = 0;
       objetoCarrinho.totalAPagar = 0;
-      await fs.writeFile(
-        __dirname + "/../cart.json",
-        JSON.stringify(objetoCarrinho, null, "  ")
-      );
-      return res
-        .status(200)
-        .json({
-          mensagem: "Sucesso. Carrinho finalizado.",
-          carrinho: {
-            produtos,
-            subtotal,
-            dataDeEntrega,
-            valorDoFrete,
-            totalAPagar,
-          },
-        });
+      const data = new Date();
+      data.setDate(data.getDate() + 3);
+      const stringData = `${data.getFullYear()}-${String(
+        data.getMonth() + 1
+      ).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
+      const objetoPagarme = {
+        amount: totalAPagar,
+        payment_method: "boleto",
+        boleto_expiration_date: stringData,
+        customer: {
+          external_id: "1",
+          name,
+          type,
+          country,
+          email: "test@gmail.com",
+          documents: [
+            {
+              type: documents[0].type,
+              number: documents[0].number,
+            },
+          ],
+          phone_numbers: ["+5571983176317"],
+          birthday: "1994-01-09",
+        },
+      };
+
+      try {
+        const pedido = await pagarme.post("transactions", objetoPagarme);
+        const pedidoFinalizado = {
+          id: pedido.data.id,
+          dataVenda: pedido.data.date_created,
+          produtos: [produtos],
+          valorVenda: pedido.data.amount,
+          linkBoleto: pedido.data.boleto_url,
+        };
+        const responseVendas = await fs.readFile(__dirname + "/../sales.json");
+        const objetoVendas = JSON.parse(responseVendas);
+        objetoVendas.push(pedidoFinalizado);
+        await fs.writeFile(
+          __dirname + "/../sales.json",
+          JSON.stringify(objetoVendas, null, "  ")
+        );
+        await fs.writeFile(
+          __dirname + "/../data.json",
+          JSON.stringify(objetoEstoque, null, "  ")
+        );
+        await fs.writeFile(
+          __dirname + "/../cart.json",
+          JSON.stringify(objetoCarrinho, null, "  ")
+        );
+        return res.status(200).json(pedidoFinalizado);
+      } catch (error) {
+        console.log(error.response.data);
+        res.status(500).json({ mensagem: "Erro ao gerar boleto," });
+      }
     } catch (error) {
       res.status(500).json({
         erro: "Algo de errado aconteceu. Tente novamente mais tarde.",
