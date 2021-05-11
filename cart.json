@@ -6,10 +6,31 @@
       "preco": 529,
       "quantidade": 1,
       "categoria": "Limpeza"
+    },
+    {
+      "id": 9,
+      "nome": "Arroz Parboilizado Tipo 1 CAMIL Pacote 5kg",
+      "preco": 2749,
+      "quantidade": 5,
+      "categoria": "Bazar"
+    },
+    {
+      "id": 2,
+      "nome": "Cerveja BADEN BADEN American Ipa Puro Malte Garrafa 600ml",
+      "preco": 908,
+      "quantidade": 2,
+      "categoria": "Bebidas"
+    },
+    {
+      "id": 10,
+      "nome": "Feijão Carioca Tipo 1 CAMIL Pacote 1kg",
+      "preco": 799,
+      "quantidade": 2,
+      "categoria": "Bazar"
     }
   ],
-  "subtotal": 529,
-  "dataDeEntrega": "2021-05-26T06:50:05.109Z",
+  "subtotal": 17688,
+  "dataDeEntrega": "2021-05-26T07:18:45.864Z",
   "valorDoFrete": 5000,
-  "totalAPagar": 5529
+  "totalAPagar": 22688
 }

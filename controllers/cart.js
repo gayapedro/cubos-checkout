@@ -34,46 +34,35 @@ async function addProductToCart(req, res) {
         const estoque = await fs.readFile(__dirname + "/../data.json");
         const objetoEstoque = JSON.parse(estoque);
         const responseEstoque = objetoEstoque.produtos.find(
-          item => item.id === id
+          item => item.id === idTratado
         );
         if (!responseEstoque) {
           return res.status(404).json({ mensagem: "Esse produto não existe!" });
         }
-        if (
-          quantidade <= responseEstoque.estoque &&
-          Number(quantidade) >= 0 &&
-          !isNaN(quantidade)
-        ) {
+        if (qtdTratado <= responseEstoque.estoque) {
           const leituraCarrinho = await fs.readFile(
             __dirname + "/../cart.json"
           );
           let objetoCarrinho = JSON.parse(leituraCarrinho);
           objetoCarrinho = updateCart(
             objetoCarrinho,
-            Number(quantidade),
+            qtdTratado,
             responseEstoque.preco
           );
           if (
             objetoCarrinho.produtos.find(item => item.id === responseEstoque.id)
           ) {
-            //incrementa quantidade a produto já presente no carrinho
-            const produto = objetoCarrinho.produtos.filter(
-              item => item.id === responseEstoque.id
-            );
-            if (responseEstoque.estoque >= quantidade + produto[0].quantidade) {
-              produto[0].quantidade += Number(quantidade);
-            } else {
-              res
-                .status(404)
-                .json({ mensagem: "Esse produto não tem estoque suficiente!" });
-            }
+            //produto no carrinho, usar patch para alterar
+            return res
+              .status(400)
+              .json({ mensagem: "Produto já adicionado ao carrinho." });
           } else {
             //adiciona produto novo ao carrinho
             const novoObjeto = {
               id: responseEstoque.id,
               nome: responseEstoque.nome,
               preco: responseEstoque.preco,
-              quantidade: Number(quantidade),
+              quantidade: qtdTratado,
               categoria: responseEstoque.categoria,
             };
             objetoCarrinho.produtos.push(novoObjeto);
