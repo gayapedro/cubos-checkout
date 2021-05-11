@@ -11,7 +11,7 @@
       "id": 2,
       "nome": "Cerveja BADEN BADEN American Ipa Puro Malte Garrafa 600ml",
       "preco": 908,
-      "estoque": 0,
+      "estoque": 10,
       "categoria": "Bebidas"
     },
     {
@@ -31,7 +31,7 @@
     {
       "id": 5,
       "nome": "Biscoito BAUDUCCO Choco Biscuit Leite 80g",
-      "preco": 5.19,
+      "preco": 519,
       "estoque": 1,
       "categoria": "Bazar"
     },
@@ -39,14 +39,14 @@
       "id": 6,
       "nome": "Café Solúvel NESCAFÉ Gold Intenso 100g",
       "preco": 2079,
-      "estoque": 0,
+      "estoque": 3,
       "categoria": "Bazar"
     },
     {
       "id": 7,
       "nome": "Macarrão Italiano Capellini N°1 BARILLA 500g",
       "preco": 859,
-      "estoque": 0,
+      "estoque": 4,
       "categoria": "Bazar"
     },
     {
