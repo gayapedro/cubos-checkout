@@ -117,24 +117,12 @@ async function patchProduct(req, res) {
           item => item.id === idTratado
         );
         if (
-          produto[0].estoque >= qtdTratado + produtoAlterar[0].quantidade &&
-          qtdTratado > 0
+          (produto[0].estoque >= qtdTratado + produtoAlterar[0].quantidade &&
+            qtdTratado > 0) ||
+          (qtdTratado < 0 &&
+            produtoAlterar[0].quantidade >= Math.abs(qtdTratado))
         ) {
-          produtoAlterar[0].quantidade += qtdTratado;
-          objetoCarrinho = updateCart(
-            objetoCarrinho,
-            qtdTratado,
-            produtoAlterar[0].preco
-          );
-          await fs.writeFile(
-            __dirname + "/../cart.json",
-            JSON.stringify(objetoCarrinho, null, "  ")
-          );
-          return res.status(200).json(objetoCarrinho);
-        } else if (
-          qtdTratado < 0 &&
-          produtoAlterar[0].quantidade >= Math.abs(qtdTratado)
-        ) {
+          //altera a quantidade no carrinho
           produtoAlterar[0].quantidade += qtdTratado;
           objetoCarrinho = updateCart(
             objetoCarrinho,
@@ -156,8 +144,9 @@ async function patchProduct(req, res) {
           return res.status(200).json(objetoCarrinho);
         } else if (
           qtdTratado < 0 &&
-          produtoAlterar[0].quantidade < qtdTratado
+          produtoAlterar[0].quantidade < Math.abs(qtdTratado)
         ) {
+          // trata caso o número a remover seja maior que o número no carrinho
           res.status(404).json({
             mensagem: "Você está tentando remover mais que o possível!",
           });

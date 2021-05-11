@@ -15,13 +15,6 @@
       "categoria": "Bazar"
     },
     {
-      "id": 2,
-      "nome": "Cerveja BADEN BADEN American Ipa Puro Malte Garrafa 600ml",
-      "preco": 908,
-      "quantidade": 2,
-      "categoria": "Bebidas"
-    },
-    {
       "id": 10,
       "nome": "Feijão Carioca Tipo 1 CAMIL Pacote 1kg",
       "preco": 799,
@@ -29,8 +22,8 @@
       "categoria": "Bazar"
     }
   ],
-  "subtotal": 17688,
-  "dataDeEntrega": "2021-05-26T07:18:45.864Z",
+  "subtotal": 15872,
+  "dataDeEntrega": "2021-05-26T07:24:20.256Z",
   "valorDoFrete": 5000,
-  "totalAPagar": 22688
+  "totalAPagar": 20872
 }
