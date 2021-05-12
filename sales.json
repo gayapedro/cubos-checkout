@@ -1,36 +1,46 @@
 [
   {
-    "id": 12227209,
-    "dataVenda": "2021-05-11T19:44:13.777Z",
+    "id": 12229517,
+    "dataVenda": "2021-05-20T00:05:48.674Z",
     "produtos": [
-      [
-        {
-          "id": 10,
-          "nome": "Feijão Carioca Tipo 1 CAMIL Pacote 1kg",
-          "preco": 799,
-          "quantidade": 2,
-          "categoria": "Bazar"
-        }
-      ]
+      {
+        "id": 9,
+        "nome": "Arroz Parboilizado Tipo 1 CAMIL Pacote 5kg",
+        "preco": 2749,
+        "quantidade": 2,
+        "categoria": "Bazar"
+      },
+      {
+        "id": 10,
+        "nome": "Feijão Carioca Tipo 1 CAMIL Pacote 1kg",
+        "preco": 799,
+        "quantidade": 1,
+        "categoria": "Bazar"
+      },
+      {
+        "id": 3,
+        "nome": "Limpador Cif Multiuso 800g Em Pó",
+        "preco": 999,
+        "quantidade": 1,
+        "categoria": "Limpeza"
+      }
     ],
-    "valorVenda": 6598,
+    "valorVenda": 12296,
     "linkBoleto": "https://pagar.me"
   },
   {
-    "id": 12227212,
-    "dataVenda": "2021-05-11T19:44:30.980Z",
+    "id": 12229525,
+    "dataVenda": "2021-05-12T00:08:58.799Z",
     "produtos": [
-      [
-        {
-          "id": 10,
-          "nome": "Feijão Carioca Tipo 1 CAMIL Pacote 1kg",
-          "preco": 799,
-          "quantidade": 2,
-          "categoria": "Bazar"
-        }
-      ]
+      {
+        "id": 3,
+        "nome": "Limpador Cif Multiuso 800g Em Pó",
+        "preco": 999,
+        "quantidade": 1,
+        "categoria": "Limpeza"
+      }
     ],
-    "valorVenda": 6598,
+    "valorVenda": 5999,
     "linkBoleto": "https://pagar.me"
   }
 ]

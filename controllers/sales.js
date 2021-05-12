@@ -29,16 +29,23 @@ async function listSales(req, res) {
     const objetoSales = JSON.parse(responseSales);
     const responseEstoque = await fs.readFile(__dirname + "/../data.json");
     const objetoEstoque = JSON.parse(responseEstoque);
-    if (!produto && !categoria && !dataInicial && !dataFinal) {
-      return res.status(200).json(objetoSales);
+    if (!produto && !categoria) {
+      //relatorio sem filtros de id e categoria (com ou sem faixa de data)
+      const objetoFiltrado = objetoSales.filter(
+        item =>
+          new Date(item.dataVenda).getTime() >= dataInicialTimestamp &&
+          new Date(item.dataVenda).getTime() <= dataFinalTimestamp
+      );
+      return res.status(200).json(objetoFiltrado);
     } else if (produto && !isNaN(produto)) {
+      //relatorio por id (com ou sem faixa de data)
       const produtoEstoque = objetoEstoque.produtos.find(
         item => item.id === Number(produto)
       );
       if (!produtoEstoque) {
         return res.status(404).json({ mensagem: "Esse produto não existe!" });
       }
-      const respostaProduto = {
+      let respostaProduto = {
         relatorioProduto: {
           id: Number(produto),
           produto: produtoEstoque.nome,
@@ -52,15 +59,41 @@ async function listSales(req, res) {
           dataVenda >= dataInicialTimestamp &&
           dataVenda <= dataFinalTimestamp
         ) {
-          const prod = venda.produtos[0].find(
-            item => item.id === Number(produto)
-          );
-          console.log(venda.produtos[0]);
+          const prod = venda.produtos.find(item => item.id === Number(produto));
           if (prod) {
             respostaProduto.relatorioProduto.quantidadeVendida +=
               prod.quantidade;
             respostaProduto.relatorioProduto.valorAcumuladoEmVendas +=
               prod.preco * prod.quantidade;
+          }
+        }
+        return res.status(200).json(respostaProduto);
+      }
+    } else if (categoria) {
+      // relatorio por categoria (com ou sem faixa de data)
+      respostaProduto = {
+        relatorioCategoria: {
+          categoria,
+          quantidadeVendida: 0,
+          valorAcumuladoEmVendas: 0,
+        },
+      };
+      for (const venda of objetoSales) {
+        const dataVenda = new Date(venda.dataVenda).getTime();
+        if (
+          dataVenda >= dataInicialTimestamp &&
+          dataVenda <= dataFinalTimestamp
+        ) {
+          for (const prod of venda.produtos) {
+            if (
+              prod.categoria ===
+              categoria[0].toUpperCase() + categoria.slice(1)
+            ) {
+              respostaProduto.relatorioCategoria.quantidadeVendida +=
+                prod.quantidade;
+              respostaProduto.relatorioCategoria.valorAcumuladoEmVendas +=
+                prod.quantidade * prod.preco;
+            }
           }
         }
       }

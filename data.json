@@ -18,7 +18,7 @@
       "id": 3,
       "nome": "Limpador Cif Multiuso 800g Em Pó",
       "preco": 999,
-      "estoque": 7,
+      "estoque": 5,
       "categoria": "Limpeza"
     },
     {
@@ -60,14 +60,14 @@
       "id": 9,
       "nome": "Arroz Parboilizado Tipo 1 CAMIL Pacote 5kg",
       "preco": 2749,
-      "estoque": 9,
+      "estoque": 5,
       "categoria": "Bazar"
     },
     {
       "id": 10,
       "nome": "Feijão Carioca Tipo 1 CAMIL Pacote 1kg",
       "preco": 799,
-      "estoque": 29,
+      "estoque": 24,
       "categoria": "Bazar"
     },
     {

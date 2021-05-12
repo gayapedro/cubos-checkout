@@ -341,7 +341,7 @@ async function finishCart(req, res) {
         const pedidoFinalizado = {
           id: pedido.data.id,
           dataVenda: pedido.data.date_created,
-          produtos: [produtos],
+          produtos: produtos,
           valorVenda: pedido.data.amount,
           linkBoleto: pedido.data.boleto_url,
         };
