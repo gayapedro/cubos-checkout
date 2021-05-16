@@ -1,0 +1,32 @@
+[
+  {
+    "id": 12267538,
+    "dataVenda": "2021-05-16T22:39:00.400Z",
+    "produtos": [
+      {
+        "id": 3,
+        "nome": "Limpador Cif Multiuso 800g Em Pó",
+        "preco": 999,
+        "quantidade": 4,
+        "categoria": "Limpeza"
+      }
+    ],
+    "valorVenda": 8996,
+    "linkBoleto": "https://pagar.me"
+  },
+  {
+    "id": 12267540,
+    "dataVenda": "2021-05-16T22:39:23.467Z",
+    "produtos": [
+      {
+        "id": 11,
+        "nome": "Oléo de Canola QUALITÁ Pet 900ml",
+        "preco": 1199,
+        "quantidade": 1,
+        "categoria": "Oleo"
+      }
+    ],
+    "valorVenda": 6199,
+    "linkBoleto": "https://pagar.me"
+  }
+]

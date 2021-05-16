@@ -25,10 +25,8 @@ async function listSales(req, res) {
     dataFinalTimestamp = Infinity;
   }
   try {
-    const responseSales = await fs.readFile(__dirname + "/../sales.json");
-    const objetoSales = JSON.parse(responseSales);
-    const responseEstoque = await fs.readFile(__dirname + "/../data.json");
-    const objetoEstoque = JSON.parse(responseEstoque);
+    const objetoSales = JSON.parse(await fs.readFile("./data/sales.json"));
+    const objetoEstoque = JSON.parse(await fs.readFile("./data/data.json"));
     if (!produto && !categoria) {
       //relatorio sem filtros de id e categoria (com ou sem faixa de data)
       const objetoFiltrado = objetoSales.filter(

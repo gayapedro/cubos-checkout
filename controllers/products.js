@@ -9,9 +9,8 @@ async function listProducts(req, res) {
     precoFinal = Infinity;
   }
   try {
-    const arquivo = await fs.readFile(__dirname + "/../data.json");
-    const objeto = JSON.parse(arquivo);
-    const response = objeto.produtos.filter(item => {
+    const objetoEstoque = JSON.parse(await fs.readFile("./data/data.json"));
+    const response = objetoEstoque.produtos.filter(item => {
       if (categoria && (precoInicial || precoFinal)) {
         //busca usando categoria, com ou sem faixa de preço
         return (

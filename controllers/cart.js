@@ -14,9 +14,8 @@ function updateCart(objetoCarrinho, quantidade, preco) {
 
 async function listCart(req, res) {
   try {
-    const response = await fs.readFile(__dirname + "/../cart.json");
-    const objeto = JSON.parse(response);
-    res.status(200).json(objeto);
+    const objetoCarrinho = JSON.parse(await fs.readFile("./data/cart.json"));
+    res.status(200).json(objetoCarrinho);
   } catch (error) {
     res
       .status(500)
@@ -32,8 +31,7 @@ async function addProductToCart(req, res) {
     const qtdTratado = Number(quantidade);
     if (qtdTratado > 0) {
       try {
-        const estoque = await fs.readFile(__dirname + "/../data.json");
-        const objetoEstoque = JSON.parse(estoque);
+        const objetoEstoque = JSON.parse(await fs.readFile("./data/data.json"));
         const responseEstoque = objetoEstoque.produtos.find(
           item => item.id === idTratado
         );
@@ -41,10 +39,9 @@ async function addProductToCart(req, res) {
           return res.status(404).json({ mensagem: "Esse produto não existe!" });
         }
         if (qtdTratado <= responseEstoque.estoque) {
-          const leituraCarrinho = await fs.readFile(
-            __dirname + "/../cart.json"
+          let objetoCarrinho = JSON.parse(
+            await fs.readFile("./data/cart.json")
           );
-          let objetoCarrinho = JSON.parse(leituraCarrinho);
           objetoCarrinho = updateCart(
             objetoCarrinho,
             qtdTratado,
@@ -70,7 +67,7 @@ async function addProductToCart(req, res) {
           }
 
           await fs.writeFile(
-            __dirname + "/../cart.json",
+            "./data/cart.json",
             JSON.stringify(objetoCarrinho, null, "  ")
           );
           return res.status(201).json(objetoCarrinho);
@@ -105,15 +102,13 @@ async function patchProduct(req, res) {
     const idTratado = Number(idProduto);
     const qtdTratado = Number(quantidade);
     try {
-      const respostaCarrinho = await fs.readFile(__dirname + "/../cart.json");
-      let objetoCarrinho = JSON.parse(respostaCarrinho);
+      let objetoCarrinho = JSON.parse(await fs.readFile("./data/cart.json"));
       const produtoAlterar = objetoCarrinho.produtos.filter(
         item => item.id === idTratado
       );
       const indice = objetoCarrinho.produtos.indexOf(produtoAlterar[0]);
       if (indice !== -1) {
-        const respostaEstoque = await fs.readFile(__dirname + "/../data.json");
-        const objetoEstoque = JSON.parse(respostaEstoque);
+        const objetoEstoque = JSON.parse(await fs.readFile("./data/data.json"));
         const produto = objetoEstoque.produtos.filter(
           item => item.id === idTratado
         );
@@ -139,7 +134,7 @@ async function patchProduct(req, res) {
             }
           }
           await fs.writeFile(
-            __dirname + "/../cart.json",
+            "./data/cart.json",
             JSON.stringify(objetoCarrinho, null, "  ")
           );
           return res.status(200).json(objetoCarrinho);
@@ -179,8 +174,7 @@ async function deleteProduct(req, res) {
   if (!isNaN(idProduto)) {
     const idTratado = Number(idProduto);
     try {
-      const responseCarrinho = await fs.readFile(__dirname + "/../cart.json");
-      let objetoCarrinho = JSON.parse(responseCarrinho);
+      let objetoCarrinho = JSON.parse(await fs.readFile("./data/cart.json"));
       const produtoRemover = objetoCarrinho.produtos.filter(
         item => item.id === idTratado
       );
@@ -198,7 +192,7 @@ async function deleteProduct(req, res) {
           objetoCarrinho.totalAPagar = 0;
         }
         await fs.writeFile(
-          __dirname + "/../cart.json",
+          "./data/cart.json",
           JSON.stringify(objetoCarrinho, null, "  ")
         );
         return res.status(201).json(objetoCarrinho);
@@ -222,15 +216,14 @@ async function deleteProduct(req, res) {
 
 async function deleteCart(req, res) {
   try {
-    const responseCarrinho = await fs.readFile(__dirname + "/../cart.json");
-    const objetoCarrinho = JSON.parse(responseCarrinho);
+    const objetoCarrinho = JSON.parse(await fs.readFile("./data/cart.json"));
     objetoCarrinho.produtos = [];
     objetoCarrinho.subtotal = 0;
     objetoCarrinho.dataDeEntrega = null;
     objetoCarrinho.valorDoFrete = 0;
     objetoCarrinho.totalAPagar = 0;
     await fs.writeFile(
-      __dirname + "/../cart.json",
+      "./data/cart.json",
       JSON.stringify(objetoCarrinho, null, "  ")
     );
     return res
@@ -245,10 +238,8 @@ async function deleteCart(req, res) {
 }
 
 async function finishCart(req, res) {
-  const responseCarrinho = await fs.readFile(__dirname + "/../cart.json");
-  const responseEstoque = await fs.readFile(__dirname + "/../data.json");
-  let objetoCarrinho = JSON.parse(responseCarrinho);
-  const objetoEstoque = JSON.parse(responseEstoque);
+  let objetoCarrinho = JSON.parse(await fs.readFile("./data/cart.json"));
+  const objetoEstoque = JSON.parse(await fs.readFile("./data/data.json"));
   // verifica se carrinho está vazio
   if (objetoCarrinho.produtos.length === 0) {
     return res.status(400).json({ mensagem: "O carrinho está vazio." });
@@ -294,10 +285,8 @@ async function finishCart(req, res) {
       }
     }
     try {
-      const responseCarrinho = await fs.readFile(__dirname + "/../cart.json");
-      const responseEstoque = await fs.readFile(__dirname + "/../data.json");
-      const objetoCarrinho = JSON.parse(responseCarrinho);
-      const objetoEstoque = JSON.parse(responseEstoque);
+      const objetoCarrinho = JSON.parse(await fs.readFile("./data/cart.json"));
+      const objetoEstoque = JSON.parse(await fs.readFile("./data/data.json"));
       for (const produto of objetoCarrinho.produtos) {
         const produtoBaixa = objetoEstoque.produtos.find(
           item => item.id === produto.id
@@ -345,19 +334,18 @@ async function finishCart(req, res) {
           valorVenda: pedido.data.amount,
           linkBoleto: pedido.data.boleto_url,
         };
-        const responseVendas = await fs.readFile(__dirname + "/../sales.json");
-        const objetoVendas = JSON.parse(responseVendas);
+        const objetoVendas = JSON.parse(await fs.readFile("./data/sales.json"));
         objetoVendas.push(pedidoFinalizado);
         await fs.writeFile(
-          __dirname + "/../sales.json",
+          "./data/sales.json",
           JSON.stringify(objetoVendas, null, "  ")
         );
         await fs.writeFile(
-          __dirname + "/../data.json",
+          "./data/data.json",
           JSON.stringify(objetoEstoque, null, "  ")
         );
         await fs.writeFile(
-          __dirname + "/../cart.json",
+          "./data/cart.json",
           JSON.stringify(objetoCarrinho, null, "  ")
         );
         return res.status(200).json(pedidoFinalizado);

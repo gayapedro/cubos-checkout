@@ -18,7 +18,7 @@
       "id": 3,
       "nome": "Limpador Cif Multiuso 800g Em Pó",
       "preco": 999,
-      "estoque": 5,
+      "estoque": 1,
       "categoria": "Limpeza"
     },
     {
@@ -60,7 +60,7 @@
       "id": 9,
       "nome": "Arroz Parboilizado Tipo 1 CAMIL Pacote 5kg",
       "preco": 2749,
-      "estoque": 5,
+      "estoque": 1,
       "categoria": "Bazar"
     },
     {
@@ -74,7 +74,7 @@
       "id": 11,
       "nome": "Oléo de Canola QUALITÁ Pet 900ml",
       "preco": 1199,
-      "estoque": 22,
+      "estoque": 21,
       "categoria": "Oleo"
     },
     {
